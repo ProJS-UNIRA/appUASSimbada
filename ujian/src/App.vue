@@ -535,7 +535,7 @@ onUnmounted(() => {
             <li class="list-group-item d-flex justify-content-between align-items-start" :class="{ 'bg-light': i == currentSoal }">
               <div class="ms-2 me-auto">
                 <div class="mb-2 badge bg-info">{{ s.soal.split('::')[0] }}</div>
-                <span class="question d-block">{{ s.soal.split('::')[1] }}</span>
+                <span class="question d-block" :class="{ 'text-decoration-line-through': checkJawaban(i) }">{{ s.soal.split('::')[1] }}</span>
               </div>
               <span class="badge rounded-pill" :class="checkJawaban(i) ? 'bg-success' : 'bg-danger'"><i class="bx" :class="checkJawaban(i) ? 'bx-check' : 'bx-x'"></i></span>
             </li>

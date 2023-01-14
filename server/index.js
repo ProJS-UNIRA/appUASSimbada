@@ -25,13 +25,10 @@ app.get('/soal', async (req, res) => {
       const file = fs.readFileSync('./movie.sql', 'utf8').toString();
       await mainPool.query(file);
     }
-    mainPool.end();
   } catch(err) {
     console.log(err);
     mainPool.end();
     return res.json(err);
-  } finally {
-    mainPool.end();
   }
 
   const pool = await generatePool(generateConfig({
@@ -39,14 +36,11 @@ app.get('/soal', async (req, res) => {
   }), 'uas');
   try {
     const result = await pool.query('SELECT id, soal FROM soal');
-    pool.end();
     return res.json(result);
   } catch(err) {
     console.log(err);
     pool.end();
     return res.json(err);
-  } finally {
-    pool.end();
   }
 });
 
@@ -65,8 +59,6 @@ app.post('/jawab', async (req, res) => {
     console.log(err);
     mainPool.end();
     return res.json(err);
-  } finally {
-    mainPool.end();
   }
   
   const pool = await generatePool(generateConfig({
@@ -76,7 +68,6 @@ app.post('/jawab', async (req, res) => {
     // sql must be not contain drop, alter, truncate, rename, insert, update, delete
     const sqlLowered = sql.toLowerCase();
     if (sqlLowered.includes('drop') || sqlLowered.includes('alter') || sqlLowered.includes('truncate') || sqlLowered.includes('rename') || sqlLowered.includes('insert') || sqlLowered.includes('update') || sqlLowered.includes('delete')) {
-      pool.end();
       return res.json({
         output: 'SQL not allowed', status: false
       });
@@ -92,15 +83,11 @@ app.post('/jawab', async (req, res) => {
         await mainPool.query(`INSERT INTO jawaban (soal, nim) VALUES (?, ?)`, [soal, nim]);
       }
       
-      mainPool.end();
-      pool.end();
       return res.json({
         output, status: true
       });
     }
 
-    mainPool.end();
-    pool.end();
     return res.json({
       output, status: false
     });
@@ -110,8 +97,6 @@ app.post('/jawab', async (req, res) => {
     return res.json({
       output: err.text, status: false
     });
-  } finally {
-    pool.end();
   }
 });
 
@@ -123,14 +108,11 @@ app.get('/output/:id', async (req, res) => {
 
   try {
     const result = await pool.query(`SELECT output FROM soal WHERE id = ${id}`);
-    pool.end();
     return res.json(result[0]);
   } catch(err) {
     console.log(err);
     pool.end();
     return res.json(err);
-  } finally {
-    pool.end();
   }
 });
 
@@ -145,14 +127,11 @@ app.post('/test', async (req, res) => {
   }));
   try {
     const result = await pool.query(sql);
-    pool.end();
     return res.json(result);
   } catch(err) {
     console.log(err);
     pool.end();
     return res.json(err);
-  } finally {
-    pool.end();
   }
 });
 

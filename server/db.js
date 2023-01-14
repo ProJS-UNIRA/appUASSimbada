@@ -1,8 +1,38 @@
 import mariadb from 'mariadb';
 
-async function generatePool(config) {
-  const pool = mariadb.createPool(config);
-  const conn = await pool.getConnection();
+let mainPool;
+let uasPool;
+let mhsPool;
+let moviePool;
+
+async function generatePool(config, type) {
+  let conn;
+  switch (type) {
+    case 'main':
+      if (! mainPool) {
+        mainPool = mariadb.createPool(config);
+        conn = await mainPool.getConnection();
+      }
+      break;
+    case 'uas':
+      if (! uasPool) {
+        uasPool = mariadb.createPool(config);
+        conn = await uasPool.getConnection();
+      }
+      break;
+    case 'mhs':
+      if (! mhsPool) {
+        mhsPool = mariadb.createPool(config);
+        conn = await mhsPool.getConnection();
+      }
+      break;
+    default:
+      if (! moviePool) {
+        moviePool = mariadb.createPool(config);
+        conn = await moviePool.getConnection();
+      }
+      break;
+  }
   return conn;
 }
 

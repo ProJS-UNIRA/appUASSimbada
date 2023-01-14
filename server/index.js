@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
 app.get('/soal', async (req, res) => {
   // check if database exists from variable nim
   // if not, create database
-  const mainPool = await generatePool(generateConfig({}, false));
+  const mainPool = await generatePool(generateConfig({}, false), 'main');
   try {
     const nim = `db_${req.query.nim}`;
     const result = await mainPool.query(`SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '${nim}'`);
@@ -36,7 +36,7 @@ app.get('/soal', async (req, res) => {
 
   const pool = await generatePool(generateConfig({
     database: 'uas'
-  }));
+  }), 'uas');
   try {
     const result = await pool.query('SELECT id, soal FROM soal');
     pool.end();
@@ -57,7 +57,7 @@ app.post('/jawab', async (req, res) => {
   let expectedOutput = '';
   const mainPool = await generatePool(generateConfig({
     database: 'uas'
-  }));
+  }), 'uas');
   try {
     const result = await mainPool.query(`SELECT output FROM soal WHERE id = ${soal}`);
     expectedOutput = result[0].output;
@@ -71,7 +71,7 @@ app.post('/jawab', async (req, res) => {
   
   const pool = await generatePool(generateConfig({
     database: `db_${nim}`
-  }));
+  }), 'mhs');
   try {
     // sql must be not contain drop, alter, truncate, rename, insert, update, delete
     const sqlLowered = sql.toLowerCase();
@@ -119,7 +119,7 @@ app.get('/output/:id', async (req, res) => {
   const id = req.params.id;
   const pool = await generatePool(generateConfig({
     database: 'uas'
-  }));
+  }), 'uas');
 
   try {
     const result = await pool.query(`SELECT output FROM soal WHERE id = ${id}`);

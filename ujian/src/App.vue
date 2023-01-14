@@ -336,14 +336,14 @@ onUnmounted(() => {
 <template>
   <nav class="navbar bg-light shadow-sm">
     <div class="container-fluid">
-      <button class="navbar-brand d-flex align-items-center btn shadow-sm" type="button" @click="executeSQL()" :disabled="! loggedIn" :class="! loggedIn ? 'btn-outline-warning' : 'btn-warning fw-bold'">
-        <i class="bx bx-play-circle text-success" style="font-size: 30px;"></i>
-        <span class="ms-2 fs-6">Eksekusi SQL</span>
-      </button>
       <form>
         <button class="btn btn-primary py-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#loginModal" type="button" v-if="! loggedIn"><i class="bx bx-log-in-circle"></i> Masuk Aplikasi</button>
         <button class="btn btn-dark py-2 shadow-sm" type="button" @click="logout()" v-else><i class="bx bx-log-out-circle"></i> Keluar Aplikasi</button>
       </form>
+       <button class="navbar-brand d-flex align-items-center btn shadow-sm" type="button" @click="executeSQL()" :disabled="! loggedIn" :class="! loggedIn ? 'btn-outline-warning' : 'btn-warning fw-bold'">
+        <i class="bx bx-play-circle text-success" style="font-size: 30px;"></i>
+        <span class="ms-2 fs-6">Eksekusi SQL</span>
+      </button>
     </div>
   </nav>
   <div class="main-content">

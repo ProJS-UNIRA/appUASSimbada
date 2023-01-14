@@ -30,6 +30,8 @@ app.get('/soal', async (req, res) => {
     console.log(err);
     mainPool.end();
     return res.json(err);
+  } finally {
+    mainPool.end();
   }
 
   const pool = await generatePool(generateConfig({
@@ -43,6 +45,8 @@ app.get('/soal', async (req, res) => {
     console.log(err);
     pool.end();
     return res.json(err);
+  } finally {
+    pool.end();
   }
 });
 
@@ -59,8 +63,10 @@ app.post('/jawab', async (req, res) => {
     expectedOutput = result[0].output;
   } catch(err) {
     console.log(err);
-    pool.end();
+    mainPool.end();
     return res.json(err);
+  } finally {
+    mainPool.end();
   }
   
   const pool = await generatePool(generateConfig({
@@ -85,6 +91,7 @@ app.post('/jawab', async (req, res) => {
       if (result[0].TOTAL === 0) {
         await mainPool.query(`INSERT INTO jawaban (soal, nim) VALUES (?, ?)`, [soal, nim]);
       }
+      
       mainPool.end();
       pool.end();
       return res.json({
@@ -103,6 +110,8 @@ app.post('/jawab', async (req, res) => {
     return res.json({
       output: err.text, status: false
     });
+  } finally {
+    pool.end();
   }
 });
 
@@ -111,6 +120,7 @@ app.get('/output/:id', async (req, res) => {
   const pool = await generatePool(generateConfig({
     database: 'uas'
   }));
+
   try {
     const result = await pool.query(`SELECT output FROM soal WHERE id = ${id}`);
     pool.end();
@@ -119,6 +129,8 @@ app.get('/output/:id', async (req, res) => {
     console.log(err);
     pool.end();
     return res.json(err);
+  } finally {
+    pool.end();
   }
 });
 
@@ -139,6 +151,8 @@ app.post('/test', async (req, res) => {
     console.log(err);
     pool.end();
     return res.json(err);
+  } finally {
+    pool.end();
   }
 });
 
